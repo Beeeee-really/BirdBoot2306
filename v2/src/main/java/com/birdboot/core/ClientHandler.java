@@ -21,8 +21,15 @@ public class ClientHandler implements Runnable {
         try {
             InputStream is = socket.getInputStream();
             int d;
+            char pre = 'a', cur = 'a';
+            StringBuilder stringBuilder = new StringBuilder();
             while ((d = is.read()) != -1) {
-                System.out.print((char) d);
+                cur = (char) d;
+                if (pre == 13 && cur == 10) {
+                    break;
+                }
+                stringBuilder.append(cur);
+                pre = cur;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
