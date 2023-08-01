@@ -35,6 +35,11 @@ public class ClientHandler implements Runnable {
             System.out.println("uri:" + uri);//index.html
             System.out.println("protocol:" + protocol);//HTTP/1.1
 
+
+            //读取消息头
+            line = readLine();
+            System.out.println("消息头:" + line);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
