@@ -19,19 +19,7 @@ public class ClientHandler implements Runnable {
 
         //读取浏览器发送的内容
         try {
-            InputStream is = socket.getInputStream();
-            int d;
-            char pre = 'a', cur = 'a';
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((d = is.read()) != -1) {
-                cur = (char) d;
-                if (pre == 13 && cur == 10) {
-                    break;
-                }
-                stringBuilder.append(cur);
-                pre = cur;
-            }
-            String line = stringBuilder.toString().trim();
+            String line = readLine();
             System.out.println("请求行:" + line);
             //请求相关信息
             String method;
@@ -46,9 +34,33 @@ public class ClientHandler implements Runnable {
             System.out.println("method:" + method);//GET
             System.out.println("uri:" + uri);//index.html
             System.out.println("protocol:" + protocol);//HTTP/1.1
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    /**
+     * 读取方法
+     *
+     * @return
+     * @throws IOException
+     */
+    private String readLine() throws IOException {
+        InputStream is = socket.getInputStream();
+        int d;
+        char pre = 'a', cur = 'a';
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((d = is.read()) != -1) {
+            cur = (char) d;
+            if (pre == 13 && cur == 10) {
+                break;
+            }
+            stringBuilder.append(cur);
+            pre = cur;
+        }
+        return stringBuilder.toString().trim();
 
     }
 }
