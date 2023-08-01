@@ -22,7 +22,7 @@ public class ClientHandler implements Runnable {
             InputStream is = socket.getInputStream();
             int d;
             while ((d = is.read()) != -1) {
-                
+                System.out.print((char) d);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
