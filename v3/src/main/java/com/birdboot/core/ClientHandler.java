@@ -46,10 +46,8 @@ public class ClientHandler implements Runnable {
                     break;
                 }
                 System.out.println("消息头:" + line);
-
-
-
-
+                data = line.split("\\s");
+                headers.put(data[0], data[1]);
 
 
             }
