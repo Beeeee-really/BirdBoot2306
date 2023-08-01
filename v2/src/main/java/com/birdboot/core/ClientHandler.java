@@ -38,7 +38,12 @@ public class ClientHandler implements Runnable {
             String uri;
             String protocol;
 
-            System.out.println("method" + method);//GET
+            String[] data = line.split("\\s");
+            method = data[0];
+            uri = data[1];
+            protocol = data[2];
+
+            System.out.println("method:" + method);//GET
             System.out.println("uri:" + uri);//index.html
             System.out.println("protocol:" + protocol);//HTTP/1.1
         } catch (IOException e) {
