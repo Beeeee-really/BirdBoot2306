@@ -1,5 +1,7 @@
 package com.birdboot.core;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 
 /**
@@ -16,6 +18,11 @@ public class ClientHandler implements Runnable {
     public void run() {
 
         //读取浏览器发送的内容
+        try {
+            InputStream is = socket.getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
