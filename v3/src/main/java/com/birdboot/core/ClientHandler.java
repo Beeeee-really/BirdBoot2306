@@ -37,9 +37,13 @@ public class ClientHandler implements Runnable {
 
 
             //读取消息头
-            line = readLine();
-            System.out.println("消息头:" + line);
-
+            while (true) {
+                line = readLine();
+                if (line.isEmpty()) {
+                    break;
+                }
+                System.out.println("消息头:" + line);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
