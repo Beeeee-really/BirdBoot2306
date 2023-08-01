@@ -3,6 +3,8 @@ package com.birdboot.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 对指定客户端进行HTTP交流
@@ -37,13 +39,23 @@ public class ClientHandler implements Runnable {
 
 
             //读取消息头
+            Map<String, String> headers = new HashMap<>();
             while (true) {
                 line = readLine();
                 if (line.isEmpty()) {
                     break;
                 }
                 System.out.println("消息头:" + line);
+                
+
+
+
+
+
             }
+
+
+            System.out.println(headers);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
