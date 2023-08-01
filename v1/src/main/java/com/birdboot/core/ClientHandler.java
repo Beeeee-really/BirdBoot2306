@@ -20,6 +20,10 @@ public class ClientHandler implements Runnable {
         //读取浏览器发送的内容
         try {
             InputStream is = socket.getInputStream();
+            int d;
+            while ((d = is.read()) != -1) {
+                
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
