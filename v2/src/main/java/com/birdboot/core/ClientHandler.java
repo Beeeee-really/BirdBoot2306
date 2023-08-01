@@ -31,6 +31,16 @@ public class ClientHandler implements Runnable {
                 stringBuilder.append(cur);
                 pre = cur;
             }
+            String line = stringBuilder.toString().trim();
+            System.out.println("请求行:" + line);
+            //请求相关信息
+            String method;
+            String uri;
+            String protocol;
+
+            System.out.println("method" + method);
+            System.out.println("uri:" + uri);
+            System.out.println("protocol:" + protocol);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
