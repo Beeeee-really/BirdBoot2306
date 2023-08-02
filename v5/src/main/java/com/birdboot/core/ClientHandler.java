@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,39 +30,17 @@ public class ClientHandler implements Runnable {
 
             //处理请求
             //将响应发送出去
-            File file = new File("./v5/src/main/resources/static/index.html");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//            File file = new File("./v5/src/main/resources/static/index.html");
+            File baseDir = new File(ClientHandler.class.getClassLoader().getResource(".").toURI());
+            //定位类加载路径下的目录
+            File staticDir = new File(baseDir, "static");
+            //定位static并返回
+            File file = new File(staticDir, "index.html");
 
 
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         } finally {
             try {
@@ -72,6 +51,15 @@ public class ClientHandler implements Runnable {
         }
 
     }
+
+//    public static void main(String[] args) throws URISyntaxException {
+//        File baseDir = new File(ClientHandler.class.getClassLoader().getResource(".").toURI());
+//        //定位类加载路径下的目录
+//        File staticDir = new File(baseDir, "static");
+//        //定位static并返回
+//        File file = new File(staticDir, "index.html");
+//        System.out.println(file.exists());
+//    }
 
 
 }
