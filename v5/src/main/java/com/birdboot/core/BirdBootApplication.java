@@ -26,7 +26,8 @@ public class BirdBootApplication {
             Socket socket = serverSocket.accept();
             System.out.println("一个客户端连接了!");
             ClientHandler handler = new ClientHandler(socket);
-            handler.run();
+            Thread t = new Thread(handler);
+            t.start();
 
 
 
