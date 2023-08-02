@@ -1,6 +1,7 @@
 package com.birdboot.core;
 
 import com.birdboot.http.HTTPServletRequest;
+import com.birdboot.http.HTTPServletResponse;
 
 import java.io.*;
 import java.net.Socket;
@@ -25,6 +26,7 @@ public class ClientHandler implements Runnable {
             //1解析请求
             //由于将解析的代码移动到请求对象的构造器中了，因此这里实例化等同于解析了请求
             HTTPServletRequest request = new HTTPServletRequest(socket);
+            HTTPServletResponse response = new HTTPServletResponse(socket);
             String path = request.getUri();
             System.out.println("请求路径:" + path);
 
@@ -87,36 +89,25 @@ public class ClientHandler implements Runnable {
             //定位static目录中的index.html页面
             File file = new File(staticDir, path);
 
-            int statusCode;
-            String statusReason;
+
             if (file.isFile()) {
-                statusCode = 200;
-                statusReason = "OK";
+                response.setStatusCode(200);
+                response.setStatusReason("OK");
+                response.setContentFile(file);
             } else {
-                statusCode = 404;
-                statusReason = "NotFound";
+                response.setStatusCode(404);
+                response.setStatusReason("NotFound");
                 file = new File(staticDir, "Error.html");
+                response.setContentFile(file);
             }
 
             //发送状态行
-            println("HTTP/1.1 " + statusCode + " " + statusReason);
 
-            //发送响应头
-            println("Content-Type: text/html");
-            println("Content-Length: " + file.length());
+            response.response();
 
-
-            //单独发送回车+换行，表示响应头部分发送完毕
-            println("");
 
             //发送响应正文
-            OutputStream out = socket.getOutputStream();
-            FileInputStream fis = new FileInputStream(file);
-            int len;
-            byte[] buf = new byte[1024 * 10];//10kb
-            while ((len = fis.read(buf)) != -1) {
-                out.write(buf, 0, len);
-            }
+
 //方法2
 //                //3发送响应
 //            /*
@@ -222,18 +213,5 @@ public class ClientHandler implements Runnable {
 //        System.out.println(file.exists());
 //    }
 
-
-    /**
-     * 向客户发送一段字符串
-     *
-     * @param line
-     */
-    private void println(String line) throws IOException {
-        OutputStream out = socket.getOutputStream();
-        byte[] data = line.getBytes(StandardCharsets.ISO_8859_1);
-        out.write(data);
-        out.write(13);//单独发送回车符
-        out.write(10);//单独发送换行符
-    }
 
 }
