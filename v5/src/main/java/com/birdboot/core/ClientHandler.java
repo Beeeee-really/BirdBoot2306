@@ -2,6 +2,7 @@ package com.birdboot.core;
 
 import com.birdboot.http.HTTPServletRequest;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -25,6 +26,41 @@ public class ClientHandler implements Runnable {
             HTTPServletRequest httpServletRequest = new HTTPServletRequest(socket);
             String path = httpServletRequest.getUri();
             System.out.println("请求路径:" + path);
+
+            //处理请求
+            //将响应发送出去
+            File file = new File("./v5/src/main/resources/static/index.html");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
