@@ -20,6 +20,9 @@ public class HTTPServletRequest {
 
     public HTTPServletRequest(Socket socket) throws IOException {
         this.socket = socket;
+        parseContent();
+        parseHeaders();
+        parseHeadersLine();
         //读取浏览器发送的内容
 
 
