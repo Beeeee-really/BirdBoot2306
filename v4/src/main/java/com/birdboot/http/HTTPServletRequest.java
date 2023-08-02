@@ -22,35 +22,6 @@ public class HTTPServletRequest {
         this.socket = socket;
         //读取浏览器发送的内容
 
-        String line = readLine();
-        System.out.println("请求行:" + line);
-        //请求相关信息
-
-
-        String[] data = line.split("\\s");
-        method = data[0];
-        uri = data[1];
-        protocol = data[2];
-
-        System.out.println("method:" + method);//GET
-        System.out.println("uri:" + uri);//index.html
-        System.out.println("protocol:" + protocol);//HTTP/1.1
-
-
-        while (true) {
-            line = readLine();
-            if (line.isEmpty()) {
-                break;
-            }
-            System.out.println("消息头:" + line);
-            data = line.split("\\s");
-            headers.put(data[0], data[1]);
-
-
-        }
-
-
-        System.out.println(headers);
 
     }
 
@@ -96,14 +67,42 @@ public class HTTPServletRequest {
     }
 
 
-    private void parseHeadersLine(){
+    private void parseHeadersLine() throws IOException {
+        String line = readLine();
+        System.out.println("请求行:" + line);
+        //请求相关信息
+
+
+        String[] data = line.split("\\s");
+        method = data[0];
+        uri = data[1];
+        protocol = data[2];
+
+        System.out.println("method:" + method);//GET
+        System.out.println("uri:" + uri);//index.html
+        System.out.println("protocol:" + protocol);//HTTP/1.1
 
     }
-    private void parseHeaders(){
+
+    private void parseHeaders() throws IOException {
+        while (true) {
+            String line = readLine();
+            if (line.isEmpty()) {
+                break;
+            }
+            System.out.println("消息头:" + line);
+            String[] data = line.split("\\s");
+            headers.put(data[0], data[1]);
+
+
+        }
+
+
+        System.out.println(headers);
 
     }
 
-    private void parseContent(){
-        
+    private void parseContent() {
+
     }
 }
