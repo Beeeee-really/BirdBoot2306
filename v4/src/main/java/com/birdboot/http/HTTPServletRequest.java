@@ -94,4 +94,16 @@ public class HTTPServletRequest {
     public String getHeaders(String name) {
         return headers.get(name);
     }
+
+
+    private void parseHeadersLine(){
+
+    }
+    private void parseHeaders(){
+
+    }
+
+    private void parseContent(){
+        
+    }
 }

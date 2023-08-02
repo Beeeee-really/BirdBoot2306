@@ -23,6 +23,8 @@ public class ClientHandler implements Runnable {
         try {
             //1.解析请求
             HTTPServletRequest httpServletRequest = new HTTPServletRequest(socket);
+            String path = httpServletRequest.getUri();
+            System.out.println("请求路径:" + path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
