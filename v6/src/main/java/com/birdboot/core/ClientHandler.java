@@ -87,7 +87,8 @@ public class ClientHandler implements Runnable {
             //定位static目录中的index.html页面
             File file = new File(staticDir, path);
 
-            //3发送响应
+            if (file.exists()) {
+                //3发送响应
             /*
                 HTTP/1.1 200 OK(CRLF)
                 Content-Type: text/html(CRLF)
@@ -95,36 +96,76 @@ public class ClientHandler implements Runnable {
                 (CRLF)
                 1011101010101010101......
              */
-            OutputStream out = socket.getOutputStream();
-            //发送状态行
-            String line = "HTTP/1.1 200 OK";
-            byte[] data = line.getBytes(StandardCharsets.ISO_8859_1);
-            out.write(data);
-            out.write(13);//单独发送回车符
-            out.write(10);//单独发送换行符
-            //发送响应头
-            line = "Content-Type: text/html";
-            data = line.getBytes(StandardCharsets.ISO_8859_1);
-            out.write(data);
-            out.write(13);//单独发送回车符
-            out.write(10);//单独发送换行符
+                OutputStream out = socket.getOutputStream();
+                //发送状态行
+                String line = "HTTP/1.1 200 OK";
+                byte[] data = line.getBytes(StandardCharsets.ISO_8859_1);
+                out.write(data);
+                out.write(13);//单独发送回车符
+                out.write(10);//单独发送换行符
+                //发送响应头
+                line = "Content-Type: text/html";
+                data = line.getBytes(StandardCharsets.ISO_8859_1);
+                out.write(data);
+                out.write(13);//单独发送回车符
+                out.write(10);//单独发送换行符
 
-            line = "Content-Length: " + file.length();
-            data = line.getBytes(StandardCharsets.ISO_8859_1);
-            out.write(data);
-            out.write(13);//单独发送回车符
-            out.write(10);//单独发送换行符
+                line = "Content-Length: " + file.length();
+                data = line.getBytes(StandardCharsets.ISO_8859_1);
+                out.write(data);
+                out.write(13);//单独发送回车符
+                out.write(10);//单独发送换行符
 
-            //单独发送回车+换行，表示响应头部分发送完毕
-            out.write(13);//单独发送回车符
-            out.write(10);//单独发送换行符
+                //单独发送回车+换行，表示响应头部分发送完毕
+                out.write(13);//单独发送回车符
+                out.write(10);//单独发送换行符
 
-            //发送响应正文
-            FileInputStream fis = new FileInputStream(file);
-            int len;
-            byte[] buf = new byte[1024 * 10];//10kb
-            while ((len = fis.read(buf)) != -1) {
-                out.write(buf, 0, len);
+                //发送响应正文
+                FileInputStream fis = new FileInputStream(file);
+                int len;
+                byte[] buf = new byte[1024 * 10];//10kb
+                while ((len = fis.read(buf)) != -1) {
+                    out.write(buf, 0, len);
+                }
+            } else {
+                File file1 = new File(
+                        ClientHandler.class.getClassLoader().getResource(".").toURI()
+                );
+                //定位类加载路径下的static目录
+                File file2 = new File(file1, "static");
+                //定位static目录中的index.html页面
+                File file3 = new File(file2, "Error.html");
+                OutputStream out = socket.getOutputStream();
+                //发送状态行
+                String line = "HTTP/1.1 404 NotFound";
+                byte[] data = line.getBytes(StandardCharsets.ISO_8859_1);
+                out.write(data);
+                out.write(13);//单独发送回车符
+                out.write(10);//单独发送换行符
+                //发送响应头
+                line = "Content-Type: text/html";
+                data = line.getBytes(StandardCharsets.ISO_8859_1);
+                out.write(data);
+                out.write(13);//单独发送回车符
+                out.write(10);//单独发送换行符
+
+                line = "Content-Length: " + file3.length();
+                data = line.getBytes(StandardCharsets.ISO_8859_1);
+                out.write(data);
+                out.write(13);//单独发送回车符
+                out.write(10);//单独发送换行符
+
+                //单独发送回车+换行，表示响应头部分发送完毕
+                out.write(13);//单独发送回车符
+                out.write(10);//单独发送换行符
+
+                //发送响应正文
+                FileInputStream fis = new FileInputStream(file3);
+                int len;
+                byte[] buf = new byte[1024 * 10];//10kb
+                while ((len = fis.read(buf)) != -1) {
+                    out.write(buf, 0, len);
+                }
             }
 
 
