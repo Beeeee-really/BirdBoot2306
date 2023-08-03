@@ -20,6 +20,7 @@
         <module>v9</module>
         <module>v10</module>
         <module>v11</module>
+        <module>v12</module>
     </modules>
 
     <properties>
