@@ -50,7 +50,12 @@ public class HTTPServletResponse {
      * 将当前对象内容以标准的响应格式发送给客户端
      */
     public void response() throws IOException {
-
+        //发送状态行
+        sendStatusLine();
+        //发送响应头
+        sendHeaders();
+        //发送响应正文
+        sendContent();
 
         //单独发送回车+换行，表示响应头部分发送完毕
         println("");
