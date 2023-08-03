@@ -16,7 +16,8 @@ public class HTTPServletResponse {
     private int statusCode;
     private String statusReason;
     private File contentFile;
-    public HTTPServletResponse(Socket socket){
+
+    public HTTPServletResponse(Socket socket) {
         this.socket = socket;
     }
 
@@ -49,22 +50,43 @@ public class HTTPServletResponse {
      * 将当前对象内容以标准的响应格式发送给客户端
      */
     public void response() throws IOException {
-        println("HTTP/1.1 " + statusCode + " " + statusReason);
-
-        //发送响应头
-        println("Content-Type: text/html");
-        println("Content-Length: " + contentFile.length());
 
 
         //单独发送回车+换行，表示响应头部分发送完毕
         println("");
+
+    }
+
+
+    private void sendStatusLine() throws IOException {
+        //发送状态行
+        println("HTTP/1.1 " + statusCode + " " + statusReason);
+    }
+
+    private void sendHeaders() throws IOException {
+        //发送响应头
+        println("Content-Type: text/html");
+        println("Content-Length: " + contentFile.length());
+    }
+
+    private void sendContent() throws IOException {
         OutputStream out = socket.getOutputStream();
-        FileInputStream fis = new FileInputStream(contentFile);
-        int len;
-        byte[] buf = new byte[1024 * 10];//10kb
-        while ((len = fis.read(buf)) != -1) {
-            out.write(buf, 0, len);
-        }
+        try (
+                FileInputStream fis = new FileInputStream(contentFile);
+        ) {
+
+
+            int len;
+            byte[] buf = new byte[1024 * 10];//10kb
+            while ((len = fis.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+        }//自动关闭特性
+        //finally{
+        //     if(fis!=null){
+        //         fis.close;
+        //     }
+        //}
     }
 
     /**
