@@ -31,9 +31,9 @@ public class HTTPServletRequest {
         if (data.length > 1) {
             String[] pares = queryString.split("&");
             for (String para : pares) {
-                String[] arr = para.split("=");
+                String[] arr = para.split("=", 2);
 //                  三步运算
-                parameters.put(arr[0], arr.length > 1 ? arr[1] : "");
+                parameters.put(arr[0], arr[1]);
             }
         }
     }
@@ -128,5 +128,18 @@ public class HTTPServletRequest {
 
     public String getHeader(String name) {
         return headers.get(name);
+    }
+
+
+    public String getRequestURI() {
+        return requestURI;
+    }
+
+    public String getQueryString() {
+        return queryString;
+    }
+
+    public String getParameter(String name) {
+        return parameters.get(name);
     }
 }
