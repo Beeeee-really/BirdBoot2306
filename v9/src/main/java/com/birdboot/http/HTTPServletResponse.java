@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 响应对象
@@ -15,6 +18,8 @@ public class HTTPServletResponse {
 
     private int statusCode;
     private String statusReason;
+
+    private Map<String, String> headers = new HashMap<>();
     private File contentFile;
 
     public HTTPServletResponse(Socket socket) {
@@ -47,6 +52,16 @@ public class HTTPServletResponse {
     }
 
     /**
+     * 添加一个需要的响应头
+     *
+     * @param name
+     * @param value
+     */
+    public void addHeader(String name, String value) {
+        headers.put(name, value);
+    }
+
+    /**
      * 将当前对象内容以标准的响应格式发送给客户端
      */
     public void response() throws IOException {
@@ -70,9 +85,15 @@ public class HTTPServletResponse {
 
     private void sendHeaders() throws IOException {
         //发送响应头
-        println("Content-Type: text/html");
-        println("Content-Length: " + contentFile.length());
-
+//        println("Content-Type: text/html");
+//        println("Content-Length: " + contentFile.length());
+        Set<Map.Entry<String, String>> entrySet = headers.entrySet();
+        for (Map.Entry<String, String> e : entrySet) {
+            String key = e.getKey();
+            String value = e.getValue();
+            println(key + ": " + value);
+        }
+//单独回车换行
         println("");
     }
 

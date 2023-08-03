@@ -10,12 +10,14 @@ import java.net.URISyntaxException;
  * 处理请求
  */
 public class DispatcherServlet {
-    private DispatcherServlet(){
+    private DispatcherServlet() {
 
     }
-    public static DispatcherServlet getDispatcherServlet(){
+
+    public static DispatcherServlet getDispatcherServlet() {
         return dispatcherServlet;
     }
+
     private static DispatcherServlet dispatcherServlet = new DispatcherServlet();
 
 
@@ -98,11 +100,19 @@ public class DispatcherServlet {
         if (file.isFile()) {
             response.setStatusCode(200);
             response.setStatusReason("OK");
+
+            response.addHeader("Content-Type", "text/html");
+            response.addHeader("Content-Type", String.valueOf(file.length()));
+            response.addHeader("Server", "BirdWebServer");
+
             response.setContentFile(file);
         } else {
             response.setStatusCode(404);
             response.setStatusReason("NotFound");
             file = new File(staticDir, "Error.html");
+            response.addHeader("Content-Type", "text/html");
+            response.addHeader("Content-Type", String.valueOf(file.length()));
+            response.addHeader("Server", "BirdWebServer");
             response.setContentFile(file);
         }
 
