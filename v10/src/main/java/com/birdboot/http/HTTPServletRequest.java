@@ -1,5 +1,6 @@
 package com.birdboot.http;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -31,9 +32,13 @@ public class HTTPServletRequest {
         parseContent();
 
     }
+
     //解析请求行
     private void parseRequestLine() throws IOException {
         String line = readLine();
+        if (line.isEmpty()) {
+            throw new EmptyRequestException();
+        }
         System.out.println("请求行:" + line);//GET /index.html HTTP/1.1
 
         String[] data = line.split("\\s");//按照空白字符拆分
@@ -45,6 +50,7 @@ public class HTTPServletRequest {
         System.out.println("uri:" + uri);// /index.html
         System.out.println("protocol:" + protocol);// HTTP/1.1
     }
+
     //解析消息头
     private void parseHeaders() throws IOException {
         while (true) {
@@ -59,10 +65,10 @@ public class HTTPServletRequest {
         }
         System.out.println("headers:" + headers);
     }
+
     //解析消息正文
-    private void parseContent(){}
-
-
+    private void parseContent() {
+    }
 
 
     /**

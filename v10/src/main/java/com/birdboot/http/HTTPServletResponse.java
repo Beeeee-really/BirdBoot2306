@@ -1,5 +1,5 @@
 package com.birdboot.http;
-
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -46,9 +46,13 @@ public class HTTPServletResponse {
     public File getContentFile() {
         return contentFile;
     }
+    MimetypesFileTypeMap mftm = new MimetypesFileTypeMap();
+
 
     public void setContentFile(File contentFile) {
         this.contentFile = contentFile;
+        addHeader("Content-Type", mftm.getContentType(contentFile));
+        addHeader("Content-Type", String.valueOf(contentFile.length()));
     }
 
     /**
