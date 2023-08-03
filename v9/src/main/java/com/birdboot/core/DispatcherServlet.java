@@ -10,6 +10,14 @@ import java.net.URISyntaxException;
  * 处理请求
  */
 public class DispatcherServlet {
+    private DispatcherServlet(){
+
+    }
+    public static DispatcherServlet getDispatcherServlet(){
+        return dispatcherServlet;
+    }
+    private static DispatcherServlet dispatcherServlet = new DispatcherServlet();
+
 
     private static File baseDir;
     private static File staticDir;
