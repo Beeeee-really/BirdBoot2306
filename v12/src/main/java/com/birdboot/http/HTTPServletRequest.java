@@ -23,8 +23,19 @@ public class HTTPServletRequest {
 
     //消息头相关信息
     private Map<String, String> headers = new HashMap<>();
-    private void parseURI(){
 
+    private void parseURI() {
+
+        String[] data = uri.split("\\?");
+        requestURI = data[0];
+        if (data.length > 1) {
+            String[] pares = queryString.split("&");
+            for (String para : pares) {
+                String[] arr = para.split("=");
+//                  三步运算
+                parameters.put(arr[0], arr.length > 1 ? arr[1] : "");
+            }
+        }
     }
 
 
@@ -53,6 +64,7 @@ public class HTTPServletRequest {
         protocol = data[2];
 
         parseURI();//进一步解析URI
+
 
         System.out.println("method:" + method);// GET
         System.out.println("uri:" + uri);// /index.html
