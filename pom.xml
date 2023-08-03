@@ -17,6 +17,7 @@
         <module>v6</module>
         <module>v7</module>
         <module>v8</module>
+        <module>v9</module>
     </modules>
 
     <properties>
