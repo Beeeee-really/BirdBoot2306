@@ -21,6 +21,7 @@
         <module>v10</module>
         <module>v11</module>
         <module>v12</module>
+        <module>v13</module>
     </modules>
 
     <properties>
