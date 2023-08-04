@@ -23,6 +23,7 @@
         <module>v12</module>
         <module>v13</module>
         <module>v14</module>
+        <module>v15</module>
     </modules>
 
     <properties>

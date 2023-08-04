@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+</head>
+<body>
+<center>
+    <h1>注册</h1>
+    <h3>欢迎注册</h3>
+    <form action="/signupUser" method="get">
+        <table>
+            <tr>
+                <td>用户名</td>
+                <td>
+                    <!--输入框要指定名字，不能用中文-->
+                    <input name="username" type="text" placeholder="不能为空">
+                </td>
+            </tr>
+            <tr>
+                <td>密码</td>
+                <td>
+                    <input name="password" type="password" placeholder="不能为空">
+                </td>
+            </tr>
+            <tr>
+                <td>昵称</td>
+                <td>
+                    <input name="nickname" type="text" placeholder="不能为空">
+                </td>
+            </tr>
+            <tr>
+                <td>年龄</td>
+                <td>
+                    <input name="age" type="number" placeholder="不能为空">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="注册" >
+                </td>
+            </tr>
+        </table>
+    </form>
+    <h5>已有帐号?</h5>
+    <a href="/login.html">登录</a>
+    <br>
+    <a href="/index.html">返回首页</a>
+
+</center>
+</body>
+</html>

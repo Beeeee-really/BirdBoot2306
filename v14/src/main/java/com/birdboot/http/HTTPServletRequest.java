@@ -4,6 +4,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class HTTPServletRequest {
 
     private String requestURI;//保存uri中的请求部分("?"左侧内容)
     private String queryString;//保存uri中的参数部分("?"右侧内容)
-    private Map<String,String> parameters = new HashMap<>();//保存每一组参数
+    private Map<String, String> parameters = new HashMap<>();//保存每一组参数
 
     //消息头相关信息
     private Map<String, String> headers = new HashMap<>();
@@ -36,11 +37,12 @@ public class HTTPServletRequest {
         parseContent();
 
     }
+
     //解析请求行
     private void parseRequestLine() throws IOException, EmptyRequestException {
         String line = readLine();
         //请求行是否为空字符串，如果是，则说明本次为空请求
-        if(line.isEmpty()){
+        if (line.isEmpty()) {
             throw new EmptyRequestException();
         }
 
@@ -59,7 +61,7 @@ public class HTTPServletRequest {
     }
 
     //进一步解析uri
-    private void parseURI(){
+    private void parseURI() {
         /*
             String requestURI
             String queryString
@@ -96,25 +98,29 @@ public class HTTPServletRequest {
          */
         String[] data = uri.split("\\?");
         requestURI = data[0];
-        if(data.length>1){
+        if (data.length > 1) {
             queryString = data[1];
             /*
                 queryString:username=fancq&password=123456&nickname=chuanqi&age=22
              */
             //先拆分处每一组参数
-            String[] paras = queryString.split("&");
-            //paras:[username=, password=123456, nickname=chuanqi, age=22]
-            for(String para : paras){
-                //para:username=
-                //将每一组参数按照"="拆分出参数名和参数值
-                String[] arr = para.split("=",2);
-                //arr:[username, ""]
-                parameters.put(arr[0],arr[1]);
-            }
+            parseParameter(queryString);
         }
-        System.out.println("requestURI:"+requestURI);
-        System.out.println("queryString:"+queryString);
-        System.out.println("parameters:"+parameters);
+        System.out.println("requestURI:" + requestURI);
+        System.out.println("queryString:" + queryString);
+        System.out.println("parameters:" + parameters);
+    }
+
+    private void parseParameter(String line) {
+        String[] paras = line.split("&");
+        //paras:[username=, password=123456, nickname=chuanqi, age=22]
+        for (String para : paras) {
+            //para:username=
+            //将每一组参数按照"="拆分出参数名和参数值
+            String[] arr = para.split("=", 2);
+            //arr:[username, ""]
+            parameters.put(arr[0], arr[1]);
+        }
     }
 
 
@@ -128,14 +134,31 @@ public class HTTPServletRequest {
             System.out.println("消息头:" + line);
             //将消息头按照"冒号空格"拆分为消息头名字和对应的值。以key，value形式存入headers
             String[] data = line.split(":\\s");
-            headers.put(data[0], data[1]);
+            headers.put(data[0].toLowerCase(), data[1]);
         }
         System.out.println("headers:" + headers);
     }
+
     //解析消息正文
-    private void parseContent(){}
+    private void parseContent() throws IOException {
+        //post请求会包含正文
+        if ("post".equalsIgnoreCase(method)) {
+            String lengthStr = headers.get("content-length");
+            if (lengthStr != null) {
+                int contentLength = Integer.parseInt(lengthStr);
+                byte[] data = new byte[contentLength];
+                InputStream in = socket.getInputStream();
+                in.read(data);
 
-
+                String contentType = getParameter("Content-Type");
+                if ("application/x-www-form-urlencoded".equals(contentType)) {
+                    String line = new String(data, StandardCharsets.ISO_8859_1);
+                    System.out.println("正文内容====================" + line);
+                    parseParameter(line);
+                }
+            }
+        }
+    }
 
 
     /**
@@ -174,7 +197,7 @@ public class HTTPServletRequest {
     }
 
     public String getHeader(String name) {
-        return headers.get(name);
+        return headers.get(name.toLowerCase());
     }
 
     public String getRequestURI() {
