@@ -89,8 +89,8 @@ public class DispatcherServlet {
         //测试将static目录下的index.html页面发送给浏览器
 //            File file = new File("./V5/src/main/resources/static/index.html");
         //定位类加载路径
-
-        String path = request.getUri();
+//        因为完整的请求路径可能包含参数，因此不能作为请求路径判断操作
+        String path = request.getRequestURI();
         System.out.println("请求路径:" + path);
 
         //定位static目录中的index.html页面
@@ -120,9 +120,8 @@ public class DispatcherServlet {
 
         //发送响应正文
 
-
 //             方法2
-        //3发送响应
+//        3发送响应
 //            /*
 //                HTTP/1.1 200 OK(CRLF)
 //                Content-Type: text/html(CRLF)
