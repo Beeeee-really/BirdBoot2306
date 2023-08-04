@@ -20,8 +20,8 @@ public class HTTPServletResponse {
     private Socket socket;
 
     //状态行相关信息
-    private int statusCode;//状态代码
-    private String statusReason;//状态描述
+    private int statusCode;
+    private String statusReason;
 
     //响应头相关信息
     private Map<String,String> headers = new HashMap<>();
@@ -51,32 +51,25 @@ public class HTTPServletResponse {
     }
     //发送响应头
     private void sendHeaders() throws IOException {
-        /*
-            headers:
-                key             value
-            Content-Type        text/html
-            Content-Length      245
-            Server              BirdWebServer
-            ...                 ...
-         */
+
         //遍历headers，将所有的响应头发送给浏览器
         Set<Map.Entry<String,String>> entrySet = headers.entrySet();
         for (Map.Entry<String,String> e : entrySet){
             String key = e.getKey();
             String value = e.getValue();
-            println(key + ": " + value);//println("Content-Type: text/html");
+            println(key + ": " + value);
         }
 
-        //单独发送回车+换行，表示响应头部分发送完毕
+
         println("");
     }
     //发送响应正文
     private void sendContent() throws IOException {
-        //该流不用放在自动关闭特性中，因为ClientHandler处理一次HTTP交互最后会关闭socket
+
         OutputStream out = socket.getOutputStream();
         if(contentFile!=null) {
             try (
-                    //不写catch,因为异常需要抛出，利用自动关闭特性，最终将流确保关闭
+
                     FileInputStream fis = new FileInputStream(contentFile);
             ) {
                 int len;
@@ -99,8 +92,8 @@ public class HTTPServletResponse {
         OutputStream out = socket.getOutputStream();
         byte[] data = line.getBytes(StandardCharsets.ISO_8859_1);
         out.write(data);
-        out.write(13);//单独发送回车符
-        out.write(10);//单独发送换行符
+        out.write(13);
+        out.write(10);
     }
 
     public int getStatusCode() {
@@ -125,7 +118,7 @@ public class HTTPServletResponse {
 
     public void setContentFile(File contentFile) {
         this.contentFile = contentFile;
-        //设置正文文件的同时自动补充说明该正文的对应响应头信息
+
         addHeader("Content-Type",mftm.getContentType(contentFile));
         addHeader("Content-Length",String.valueOf(contentFile.length()));
     }
@@ -144,10 +137,8 @@ public class HTTPServletResponse {
      * @param location
      */
     public void sendRedirect(String location){
-        //将状态代码设定为302
         setStatusCode(302);
         setStatusReason("Moved Temporarily");
-        //添加响应头Location
         addHeader("Location",location);
     }
 
