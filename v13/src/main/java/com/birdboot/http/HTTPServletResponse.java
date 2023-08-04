@@ -1,4 +1,5 @@
 package com.birdboot.http;
+
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,6 +47,7 @@ public class HTTPServletResponse {
     public File getContentFile() {
         return contentFile;
     }
+
     MimetypesFileTypeMap mftm = new MimetypesFileTypeMap();
 
 
@@ -103,23 +105,26 @@ public class HTTPServletResponse {
 
     private void sendContent() throws IOException {
         OutputStream out = socket.getOutputStream();
-        try (
-                FileInputStream fis = new FileInputStream(contentFile);
-        ) {
+        if (contentFile != null) {
+            try (
+                    FileInputStream fis = new FileInputStream(contentFile);
+            ) {
 
 
-            int len;
-            byte[] buf = new byte[1024 * 10];//10kb
-            while ((len = fis.read(buf)) != -1) {
-                out.write(buf, 0, len);
+                int len;
+                byte[] buf = new byte[1024 * 10];//10kb
+                while ((len = fis.read(buf)) != -1) {
+                    out.write(buf, 0, len);
+                }
             }
-        }//自动关闭特性
-        //finally{
-        //     if(fis!=null){
-        //         fis.close;
-        //     }
-        //}
-    }
+        }
+    }//自动关闭特性
+    //finally{
+    //     if(fis!=null){
+    //         fis.close;
+    //     }
+    //}
+
 
     /**
      * 向客户发送一段字符串
@@ -134,5 +139,17 @@ public class HTTPServletResponse {
         out.write(10);//单独发送换行符
     }
 
+    /**
+     * 重定向到指定位置
+     *
+     * @param location
+     */
+    public void sendRedirect(String location) {
+        //将状态代码设为302
+        setStatusCode(302);
+        setStatusReason("Moved Temporarily");
+        //添加响应头
+        addHeader("Location", location);
+    }
 
 }

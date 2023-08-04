@@ -1,5 +1,6 @@
 package com.birdboot.core;
 
+import com.birdboot.controller.UserController;
 import com.birdboot.http.HTTPServletRequest;
 import com.birdboot.http.HTTPServletResponse;
 
@@ -93,28 +94,34 @@ public class DispatcherServlet {
         String path = request.getRequestURI();
         System.out.println("请求路径:" + path);
 
-        //定位static目录中的index.html页面
-        File file = new File(staticDir, path);
-
-
-        if (file.isFile()) {
-            response.setStatusCode(200);
-            response.setStatusReason("OK");
-
-            response.addHeader("Content-Type", "text/html");
-            response.addHeader("Content-Type", String.valueOf(file.length()));
-            response.addHeader("Server", "BirdWebServer");
-
-            response.setContentFile(file);
+        if ("/signupUser".equals(path)) {
+            UserController controller = new UserController();
+            controller.signup(request, response);
         } else {
-            response.setStatusCode(404);
-            response.setStatusReason("NotFound");
-            file = new File(staticDir, "Error.html");
-            response.addHeader("Content-Type", "text/html");
-            response.addHeader("Content-Type", String.valueOf(file.length()));
-            response.addHeader("Server", "BirdWebServer");
-            response.setContentFile(file);
+            //定位static目录中的index.html页面
+            File file = new File(staticDir, path);
+
+
+            if (file.isFile()) {
+                response.setStatusCode(200);
+                response.setStatusReason("OK");
+
+                response.addHeader("Content-Type", "text/html");
+                response.addHeader("Content-Type", String.valueOf(file.length()));
+                response.addHeader("Server", "BirdWebServer");
+
+                response.setContentFile(file);
+            } else {
+                response.setStatusCode(404);
+                response.setStatusReason("NotFound");
+                file = new File(staticDir, "Error.html");
+                response.addHeader("Content-Type", "text/html");
+                response.addHeader("Content-Type", String.valueOf(file.length()));
+                response.addHeader("Server", "BirdWebServer");
+                response.setContentFile(file);
+            }
         }
+
 
         //发送状态行
 

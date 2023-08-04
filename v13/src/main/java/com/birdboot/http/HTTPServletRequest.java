@@ -17,26 +17,13 @@ public class HTTPServletRequest {
     private String method;//请求方式
     private String uri;//抽象路径
     private String protocol;//协议版本
-    private String requestURI;//保存请求部分
-    private String queryString;
-    private Map<String, String> parameters = new HashMap<>();
+
+    private String requestURI;//保存uri中的请求部分("?"左侧内容)
+    private String queryString;//保存uri中的参数部分("?"右侧内容)
+    private Map<String,String> parameters = new HashMap<>();//保存每一组参数
 
     //消息头相关信息
     private Map<String, String> headers = new HashMap<>();
-
-    private void parseURI() {
-
-        String[] data = uri.split("\\?");
-        requestURI = data[0];
-        if (data.length > 1) {
-            String[] pares = queryString.split("&");
-            for (String para : pares) {
-                String[] arr = para.split("=", 2);
-//                  三步运算
-                parameters.put(arr[0], arr[1]);
-            }
-        }
-    }
 
 
     public HTTPServletRequest(Socket socket) throws IOException, EmptyRequestException {
@@ -49,13 +36,14 @@ public class HTTPServletRequest {
         parseContent();
 
     }
-
     //解析请求行
     private void parseRequestLine() throws IOException, EmptyRequestException {
         String line = readLine();
-        if (line.isEmpty()) {
+        //请求行是否为空字符串，如果是，则说明本次为空请求
+        if(line.isEmpty()){
             throw new EmptyRequestException();
         }
+
         System.out.println("请求行:" + line);//GET /index.html HTTP/1.1
 
         String[] data = line.split("\\s");//按照空白字符拆分
@@ -65,11 +53,70 @@ public class HTTPServletRequest {
 
         parseURI();//进一步解析URI
 
-
         System.out.println("method:" + method);// GET
         System.out.println("uri:" + uri);// /index.html
         System.out.println("protocol:" + protocol);// HTTP/1.1
     }
+
+    //进一步解析uri
+    private void parseURI(){
+        /*
+            String requestURI
+            String queryString
+            Map parameters
+
+            uri有两种情况:
+            1:不含有参数的
+              例如: /index.html
+              直接将uri的值赋值给requestURI即可.
+
+            2:含有参数的
+              例如:/regUser?username=fancq&password=123456&nickname=chuanqi&age=22
+              将uri中"?"左侧的请求部分赋值给requestURI
+              将uri中"?"右侧的参数部分赋值给queryString
+              将参数部分首先按照"&"拆分出每一组参数，再将每一组参数按照"="拆分为参数名与参数值
+              并将参数名作为key，参数值作为value存入到parameters中。
+                requestURI:/regUser
+                queryString:username=&password=123456&nickname=chuanqi&age=22
+                parameters:
+                    key             value
+                  username          ""
+                  password          123456
+                  nickname          chuanqi
+                  age               22
+
+
+           几种特殊情况
+           1:表单中有空着不写的输入框
+           例如:用户名不填
+           /regUser?username=&password=123456&nickname=chuanqi&age=22
+
+           2:表单中如果所有输入框没有指定name属性，此时表单提交则会忽略所有输入框
+           /regUser?
+         */
+        String[] data = uri.split("\\?");
+        requestURI = data[0];
+        if(data.length>1){
+            queryString = data[1];
+            /*
+                queryString:username=fancq&password=123456&nickname=chuanqi&age=22
+             */
+            //先拆分处每一组参数
+            String[] paras = queryString.split("&");
+            //paras:[username=, password=123456, nickname=chuanqi, age=22]
+            for(String para : paras){
+                //para:username=
+                //将每一组参数按照"="拆分出参数名和参数值
+                String[] arr = para.split("=",2);
+                //arr:[username, ""]
+                parameters.put(arr[0],arr[1]);
+            }
+        }
+        System.out.println("requestURI:"+requestURI);
+        System.out.println("queryString:"+queryString);
+        System.out.println("parameters:"+parameters);
+    }
+
 
     //解析消息头
     private void parseHeaders() throws IOException {
@@ -85,10 +132,10 @@ public class HTTPServletRequest {
         }
         System.out.println("headers:" + headers);
     }
-
     //解析消息正文
-    private void parseContent() {
-    }
+    private void parseContent(){}
+
+
 
 
     /**
@@ -129,7 +176,6 @@ public class HTTPServletRequest {
     public String getHeader(String name) {
         return headers.get(name);
     }
-
 
     public String getRequestURI() {
         return requestURI;
