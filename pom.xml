@@ -26,6 +26,7 @@
         <module>v15</module>
         <module>v17</module>
         <module>v18</module>
+        <module>v19</module>
     </modules>
 
     <properties>
