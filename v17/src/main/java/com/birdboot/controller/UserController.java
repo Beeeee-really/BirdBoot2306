@@ -1,6 +1,7 @@
 package com.birdboot.controller;
 
 import com.birdboot.annotation.Controller;
+import com.birdboot.annotation.RequestMapping;
 import com.birdboot.entity.User;
 import com.birdboot.http.HTTPServletRequest;
 import com.birdboot.http.HTTPServletResponse;
@@ -22,6 +23,7 @@ public class UserController {
     }
 
     //@RequestMapping("/regUser")
+    @RequestMapping("/signupUser")
     public void reg(HTTPServletRequest request, HTTPServletResponse response) {
         System.out.println("开始处理用户注册");
         //1
@@ -63,6 +65,7 @@ public class UserController {
 
     }
 
+    @RequestMapping("/loginUser")
     public void login(HTTPServletRequest request, HTTPServletResponse response) {
         System.out.println("开始处理用户登录!!!!");
 

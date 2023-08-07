@@ -1,6 +1,7 @@
 package com.birdboot.controller;
 
 import com.birdboot.annotation.Controller;
+import com.birdboot.annotation.RequestMapping;
 import com.birdboot.entity.Article;
 
 import com.birdboot.http.HTTPServletRequest;
@@ -23,6 +24,7 @@ public class ArticleController {
         }
     }
 
+    @RequestMapping("/writeArticle")
     public void writeArticle(HTTPServletRequest request, HTTPServletResponse response) {
         //1获取表单数据
         String title = request.getParameter("title");
