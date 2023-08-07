@@ -35,7 +35,7 @@ public class UserController {
                 ageStr == null || ageStr.isEmpty() ||
                 !ageStr.matches("[0-9]+")) {
 
-            response.sendRedirect("/reg_info_error.html");
+            response.sendRedirect("/signup_info_error.html");
             return;
         }
 
@@ -53,7 +53,7 @@ public class UserController {
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
         ) {
             oos.writeObject(user);
-            response.sendRedirect("/reg_success.html");
+            response.sendRedirect("/signup_success.html");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -40,7 +40,7 @@ public class DispatcherServlet {
         System.out.println("请求路径:"+path);
 
         //先查看是否为请求业务
-        if("/regUser".equals(path)){
+        if("/signupUser".equals(path)){
             UserController controller = new UserController();
             controller.reg(request, response);
         }else if("/loginUser".equals(path)){

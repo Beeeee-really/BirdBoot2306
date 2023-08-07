@@ -21,7 +21,7 @@ public class HTTPServletRequest {
 
     private String requestURI;//保存uri中的请求部分("?"左侧内容)
     private String queryString;//保存uri中的参数部分("?"右侧内容)
-    private Map<String,String> parameters = new HashMap<>();//保存每一组参数
+    private Map<String, String> parameters = new HashMap<>();//保存每一组参数
 
     //消息头相关信息
     private Map<String, String> headers = new HashMap<>();
@@ -37,11 +37,12 @@ public class HTTPServletRequest {
         parseContent();
 
     }
+
     //解析请求行
     private void parseRequestLine() throws IOException, EmptyRequestException {
         String line = readLine();
         //请求行是否为空字符串，如果是，则说明本次为空请求
-        if(line.isEmpty()){
+        if (line.isEmpty()) {
             throw new EmptyRequestException();
         }
 
@@ -60,7 +61,7 @@ public class HTTPServletRequest {
     }
 
     //进一步解析uri
-    private void parseURI(){
+    private void parseURI() {
         /*
             String requestURI
             String queryString
@@ -97,29 +98,30 @@ public class HTTPServletRequest {
          */
         String[] data = uri.split("\\?");
         requestURI = data[0];
-        if(data.length>1){
+        if (data.length > 1) {
             queryString = data[1];
             parseParameter(queryString);
         }
-        System.out.println("requestURI:"+requestURI);
-        System.out.println("queryString:"+queryString);
-        System.out.println("parameters:"+parameters);
+        System.out.println("requestURI:" + requestURI);
+        System.out.println("queryString:" + queryString);
+        System.out.println("parameters:" + parameters);
     }
 
     /**
      * 解析参数并存入parameters这个Map
-     * @param line  格式:name=value&name=value&...
+     *
+     * @param line 格式:name=value&name=value&...
      */
-    private void parseParameter(String line){
+    private void parseParameter(String line) {
         //先拆分处每一组参数
         String[] paras = line.split("&");
         //paras:[username=, password=123456, nickname=chuanqi, age=22]
-        for(String para : paras){
+        for (String para : paras) {
             //para:username=
             //将每一组参数按照"="拆分出参数名和参数值
-            String[] arr = para.split("=",2);
+            String[] arr = para.split("=", 2);
             //arr:[username, ""]
-            parameters.put(arr[0],arr[1]);
+            parameters.put(arr[0], arr[1]);
         }
     }
 
@@ -139,13 +141,14 @@ public class HTTPServletRequest {
         }
         System.out.println("headers:" + headers);
     }
+
     //解析消息正文
     private void parseContent() throws IOException {
         //post请求会包含消息正文
-        if("post".equalsIgnoreCase(method)){
+        if ("post".equalsIgnoreCase(method)) {
             String lengthStr = getHeader("Content-Length");
             //如果存在Content-Length
-            if(lengthStr!=null){
+            if (lengthStr != null) {
                 //将正文长度转换为整数
                 int contentLength = Integer.parseInt(lengthStr);
                 //根据长度读取正文所有数据
@@ -156,9 +159,9 @@ public class HTTPServletRequest {
                 //根据Content-Type来对正文进行不同的解码处理
                 String contentType = getHeader("Content-Type");
                 //如果是form表单不含附件的提交类型
-                if("application/x-www-form-urlencoded".equals(contentType)){
+                if ("application/x-www-form-urlencoded".equals(contentType)) {
                     String line = new String(data, StandardCharsets.ISO_8859_1);
-                    System.out.println("正文内容==========="+line);
+                    System.out.println("正文内容===========" + line);
                     parseParameter(line);
                 }
                 //后期还可扩展判断其他形式，比如含附件的表单提交
@@ -167,12 +170,9 @@ public class HTTPServletRequest {
 //                }
 
 
-
             }
         }
     }
-
-
 
 
     /**
