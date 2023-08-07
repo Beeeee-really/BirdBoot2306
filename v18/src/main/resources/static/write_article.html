@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发表文章</title>
+</head>
+<body>
+<center>
+    <h1>发表文章</h1>
+    <form action="/writeArticle" method="get">
+        <table>
+            <tr>
+                <td>标题</td>
+                <td>
+                    <input name="name" type="text" placeholder="输入文章标题(必写)">
+                </td>
+            </tr>
+            <tr>
+                <td>作者</td>
+                <td>
+                    <input name="author" type="text" placeholder="输入作者(必写)">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><textarea style="resize: none" cols="150" rows="50" name="text"></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="上传">
+                </td>
+            </tr>
+
+        </table>
+    </form>
+    <a href="/index.html">返回首页(您的更改不会保存)</a>
+</center>
+</body>
+</html>
